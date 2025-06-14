@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Activity } from 'src/activity/activity.schema';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -26,6 +27,10 @@ export class User extends Document {
   @Field()
   @Prop({ required: true })
   password!: string;
+
+  @Field(() => [Activity], { nullable: true })
+  @Prop({ type: [{ type: 'ObjectId', ref: 'Activity' }], default: [] })
+  favoriteActivities!: Activity[];
 
   @Prop()
   token?: string;

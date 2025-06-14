@@ -59,6 +59,7 @@ input SignUpInput {
 
 type User {
   email: String!
+  favoriteActivities: [Activity!]
   firstName: String!
   id: ID!
   lastName: String!
