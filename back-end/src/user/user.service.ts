@@ -106,10 +106,6 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    const activities = await this.activityModel
-      .find({ _id: { $in: activityIds } })
-      .exec();
-
     const storedFavoriteActivityIds = user.favoriteActivities.map((activity) =>
       activity._id.toString(),
     );
@@ -123,8 +119,23 @@ export class UserService {
       );
     }
 
-    user.favoriteActivities = activities;
-    return await user.save();
+    const activities = await this.activityModel.find({
+      _id: { $in: activityIds },
+    });
+
+    const activityMap = new Map(
+      activities.map((activity) => [activity._id.toString(), activity]),
+    );
+
+    user.favoriteActivities = activityIds.map((id) => {
+      const activity = activityMap.get(id);
+      if (!activity) {
+        throw new NotFoundException('Activity not found');
+      }
+      return activity;
+    });
+
+    return user.save();
   }
 
   async updateToken(id: string, token: string): Promise<User> {
