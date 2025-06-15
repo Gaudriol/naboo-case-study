@@ -41,6 +41,7 @@ export type Mutation = {
   createActivity: Activity;
   login: SignInDto;
   logout: Scalars['Boolean']['output'];
+  orderFavoriteActivities: User;
   register: User;
   toggleActivityAsFavorite: User;
 };
@@ -53,6 +54,11 @@ export type MutationCreateActivityArgs = {
 
 export type MutationLoginArgs = {
   signInInput: SignInInput;
+};
+
+
+export type MutationOrderFavoriteActivitiesArgs = {
+  activityIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -322,6 +328,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createActivity?: Resolver<ResolversTypes['Activity'], ParentType, ContextType, RequireFields<MutationCreateActivityArgs, 'createActivityInput'>>;
   login?: Resolver<ResolversTypes['SignInDto'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'signInInput'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  orderFavoriteActivities?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationOrderFavoriteActivitiesArgs, 'activityIds'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'signUpInput'>>;
   toggleActivityAsFavorite?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationToggleActivityAsFavoriteArgs, 'activityId'>>;
 };

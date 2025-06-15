@@ -29,6 +29,7 @@ type Mutation {
   createActivity(createActivityInput: CreateActivityInput!): Activity!
   login(signInInput: SignInInput!): SignInDto!
   logout: Boolean!
+  orderFavoriteActivities(activityIds: [String!]!): User!
   register(signUpInput: SignUpInput!): User!
   toggleActivityAsFavorite(activityId: String!): User!
 }
