@@ -75,6 +75,7 @@ export class ActivityResolver {
     return this.activityService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
   @ResolveField(() => Boolean, { nullable: true })
   async isFavorited(
     @Context() context: ContextWithJWTPayload,
@@ -88,6 +89,7 @@ export class ActivityResolver {
     return isFavorited;
   }
 
+  @UseGuards(AuthGuard)
   @ResolveField(() => Date, { nullable: true })
   async createdAt(
     @Context() context: ContextWithJWTPayload,

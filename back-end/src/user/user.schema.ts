@@ -9,6 +9,7 @@ export class User extends Document {
   @Field(() => ID)
   id!: string;
 
+  @Field(() => String)
   @Prop({ required: true, enum: ['user', 'admin'], default: 'user' })
   role!: 'user' | 'admin';
 

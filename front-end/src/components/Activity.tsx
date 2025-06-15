@@ -7,8 +7,8 @@ import {
 } from "@/graphql/generated/types";
 import ToggleActivityAsFavorite from "@/graphql/mutations/user/toggleActivityAsFavorite";
 import GetActivity from "@/graphql/queries/activity/getActivity";
-import { useSnackbar } from "@/hooks";
-import { getFormattedDate, useGlobalStyles } from "@/utils";
+import { useAuth, useSnackbar } from "@/hooks";
+import { useGlobalStyles } from "@/utils";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   ActionIcon,
@@ -28,6 +28,7 @@ interface ActivityProps {
 }
 
 export function Activity({ activity: initialActivity }: ActivityProps) {
+  const { user } = useAuth();
   const { classes } = useGlobalStyles();
   const snackbar = useSnackbar();
 
@@ -99,9 +100,11 @@ export function Activity({ activity: initialActivity }: ActivityProps) {
         <Text size="sm" color="dimmed" className={classes.ellipsis}>
           {activity.description}
         </Text>
-        <Text size="sm" color="dimmed">
-          Créée le {getFormattedDate(new Date(activity.createdAt))}
-        </Text>
+        {user?.role === "admin" && (
+          <Text size="sm" color="dimmed">
+            Créée le {new Date(activity.createdAt).toLocaleString()}
+          </Text>
+        )}
 
         <Link href={`/activities/${activity.id}`} className={classes.link}>
           <Button variant="light" color="blue" fullWidth mt="md" radius="md">

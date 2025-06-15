@@ -112,6 +112,12 @@ export default function ActivityDetails({
             <Text size="sm" color="dimmed">
               Ajouté par {activity.owner.firstName} {activity.owner.lastName}
             </Text>
+            {user?.role === "admin" && (
+              <Text size="sm" color="dimmed">
+                Créée le {new Date(activity.createdAt).toLocaleString()}
+              </Text>
+            )}
+
             <Button
               leftIcon={
                 activity.isFavorited ? (

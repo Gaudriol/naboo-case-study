@@ -1,5 +1,6 @@
 import { ActivityFragment } from "@/graphql/generated/types";
-import { getFormattedDate, useGlobalStyles } from "@/utils";
+import { useAuth } from "@/hooks";
+import { useGlobalStyles } from "@/utils";
 import { Box, Button, Flex, Image, Text } from "@mantine/core";
 import Link from "next/link";
 
@@ -8,6 +9,7 @@ interface ActivityListItemProps {
 }
 
 export function ActivityListItem({ activity }: ActivityListItemProps) {
+  const { user } = useAuth();
   const { classes } = useGlobalStyles();
 
   return (
@@ -24,9 +26,11 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
           <Text className={classes.ellipsis}>{activity.city}</Text>
           <Text className={classes.ellipsis}>{activity.name}</Text>
           <Text className={classes.ellipsis}>{activity.description}</Text>
-          <Text size="sm" color="dimmed">
-            Créée le {getFormattedDate(new Date(activity.createdAt))}
-          </Text>
+          {user?.role === "admin" && (
+            <Text size="sm" color="dimmed">
+              Créée le {new Date(activity.createdAt).toLocaleString()}
+            </Text>
+          )}
 
           <Text
             weight="bold"
