@@ -1,4 +1,4 @@
-import { ActionIcon, Group } from "@mantine/core";
+import { ActionIcon, Group, Title } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ export function PageTitle({ title, prevPath }: PageTitleProps) {
           <IconArrowLeft size="1.125rem" />
         </ActionIcon>
       )}
-      <h2>{title}</h2>
+      <Title order={2}>{title}</Title>
     </Group>
   );
 }

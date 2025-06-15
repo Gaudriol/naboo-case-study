@@ -80,14 +80,11 @@ export class ActivityResolver {
     @Context() context: ContextWithJWTPayload,
     @Parent() activity: Activity,
   ): Promise<boolean | null> {
-    console.log('Checking if activity is favorited by user:', activity._id);
     if (!context.jwtPayload?.id) {
       return null;
     }
-    console.log('Passed user check | Context JWT Payload:', context.jwtPayload);
     const user = await this.userService.getById(context.jwtPayload.id);
     const isFavorited = user.favoriteActivities.includes(activity._id);
-    console.log('returning:', isFavorited);
     return isFavorited;
   }
 

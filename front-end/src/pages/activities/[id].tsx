@@ -24,6 +24,7 @@ export const getServerSideProps: GetServerSideProps<
   ActivityDetailsProps
 > = async ({ params, req }) => {
   if (!params?.id || Array.isArray(params.id)) return { notFound: true };
+  // To avoid having browser extensions map files triggering route calls
   if (!/^[0-9a-fA-F]{24}$/.test(params.id)) return { notFound: true };
   const response = await graphqlClient.query<
     GetActivityQuery,
