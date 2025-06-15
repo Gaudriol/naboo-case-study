@@ -4,12 +4,15 @@ import { Model } from 'mongoose';
 import { SignUpInput } from 'src/auth/types';
 import { User } from './user.schema';
 import * as bcrypt from 'bcrypt';
+import { Activity } from 'src/activity/activity.schema';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
+    @InjectModel(Activity.name)
+    private activityModel: Model<Activity>,
   ) {}
 
   async getByEmail(email: string): Promise<User> {
@@ -40,6 +43,56 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = new this.userModel({ ...data, password: hashedPassword });
     return user.save();
+  }
+
+  async getFavoriteActivities(userId: string): Promise<Activity[]> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await user.populate({
+      path: 'favoriteActivities',
+      populate: {
+        path: 'owner',
+      },
+    });
+    return user.favoriteActivities || [];
+  }
+
+  async toggleActivityAsFavorite({
+    userId,
+    activityId,
+  }: {
+    userId: string;
+    activityId: string;
+  }): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const activity = await this.activityModel.findById(activityId);
+    if (!activity) {
+      throw new NotFoundException('Activity not found');
+    }
+
+    // await user.populate({
+    //   path: 'favoriteActivities',
+    // });
+
+    console.log('USER FAVORITE ACTIVITIES', user.favoriteActivities);
+
+    const activityIndex = user.favoriteActivities.findIndex(
+      (favoritedActivity) => favoritedActivity._id.toString() === activityId,
+    );
+
+    if (activityIndex === -1) {
+      user.favoriteActivities.push(activity);
+    } else {
+      user.favoriteActivities.splice(activityIndex, 1);
+    }
+
+    return await user.save();
   }
 
   async updateToken(id: string, token: string): Promise<User> {

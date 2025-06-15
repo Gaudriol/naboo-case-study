@@ -29,6 +29,7 @@ type Mutation {
   login(signInInput: SignInInput!): SignInDto!
   logout: Boolean!
   register(signUpInput: SignUpInput!): User!
+  toggleFavoriteActivity(activityId: String!): User!
 }
 
 type Query {
@@ -39,6 +40,7 @@ type Query {
   getCities: [String!]!
   getLatestActivities: [Activity!]!
   getMe: User!
+  getUserFavoriteActivities: [Activity!]!
 }
 
 type SignInDto {
