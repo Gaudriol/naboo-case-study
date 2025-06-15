@@ -73,7 +73,7 @@ export default function ActivityDetails({
       searchParams.set("price", debouncedSearchPrice.toString());
 
     const stringParams = searchParams.toString();
-    router.push(`/explorer/${city}${stringParams ? `?${stringParams}` : ""}`);
+    router.push(`/explore/${city}${stringParams ? `?${stringParams}` : ""}`);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [city, debouncedSearchActivity, debouncedSearchPrice]);
@@ -85,7 +85,7 @@ export default function ActivityDetails({
       </Head>
       <PageTitle
         title={`Activités pour la ville de ${city}`}
-        prevPath="/explorer"
+        prevPath="/explore"
       />
       <Grid>
         <Grid.Col span={4}>

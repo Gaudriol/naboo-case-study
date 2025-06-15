@@ -9,12 +9,12 @@ import { Flex } from "@mantine/core";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
-interface ExplorerProps {
+interface ExploreProps {
   cities: GetCitiesQuery["getCities"];
 }
 
 export const getServerSideProps: GetServerSideProps<
-  ExplorerProps
+  ExploreProps
 > = async () => {
   const response = await graphqlClient.query<
     GetCitiesQuery,
@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<
   return { props: { cities: response.data.getCities } };
 };
 
-export default function Explorer({ cities }: ExplorerProps) {
+export default function Explore({ cities }: ExploreProps) {
   return (
     <>
       <Head>

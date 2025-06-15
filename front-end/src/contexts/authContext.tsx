@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const token = response.data?.login?.access_token || "";
       localStorage.setItem("token", token);
       await getUser().then((res) => setUser(res.data?.getMe || null));
-      router.push("/profil");
+      router.push("/profile");
     } catch (err) {
       snackbar.error("Une erreur est survenue");
     } finally {

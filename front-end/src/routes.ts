@@ -3,14 +3,14 @@ import { Route } from "./components/Topbar";
 
 export const routes: Route[] = [
   { label: "Découvrez des activités", route: "/discover" },
-  { label: "Explorer", route: "/explorer" },
+  { label: "Explorer", route: "/explore" },
   { label: "Mes activités", route: "/my-activities", requiredAuth: true },
   {
     label: "Utilisateur",
     icon: IconUserCircle,
     route: [
       {
-        label: "Connection",
+        label: "Connexion",
         link: "/signin",
         requiredAuth: false,
       },
@@ -19,8 +19,8 @@ export const routes: Route[] = [
         link: "/signup",
         requiredAuth: false,
       },
-      { label: "Profil", link: "/profil", requiredAuth: true },
-      { label: "Déconnection", link: "/logout", requiredAuth: true },
+      { label: "Profil", link: "/profile", requiredAuth: true },
+      { label: "Déconnexion", link: "/logout", requiredAuth: true },
     ],
   },
 ];

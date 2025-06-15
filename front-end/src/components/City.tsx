@@ -10,7 +10,7 @@ export function City({ city }: CityProps) {
   const { classes } = useGlobalStyles();
 
   return (
-    <Link href={`/explorer/${city}`} className={classes.link}>
+    <Link href={`/explore/${city}`} className={classes.link}>
       <Card
         shadow="sm"
         padding="lg"
