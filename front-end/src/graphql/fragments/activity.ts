@@ -9,6 +9,7 @@ const ActivityFragment = gql`
     name
     price
     isFavorited
+    createdAt
     owner {
       ...Owner
     }

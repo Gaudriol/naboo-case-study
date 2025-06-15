@@ -88,6 +88,25 @@ export class ActivityResolver {
     return isFavorited;
   }
 
+  @ResolveField(() => Date, { nullable: true })
+  async createdAt(
+    @Context() context: ContextWithJWTPayload,
+    @Parent() activity: Activity,
+  ): Promise<Date | null> {
+    console.log('RESOLVER');
+    if (!context.jwtPayload?.id) {
+      return null;
+    }
+    const user = await this.userService.getById(context.jwtPayload.id);
+    console.log(
+      'createdAt',
+      context.jwtPayload?.id,
+      activity.createdAt,
+      user.role,
+    );
+    return user.role === 'admin' ? activity.createdAt : null;
+  }
+
   @Mutation(() => Activity)
   @UseGuards(AuthGuard)
   async createActivity(

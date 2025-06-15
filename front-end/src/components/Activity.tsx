@@ -8,7 +8,7 @@ import {
 import ToggleActivityAsFavorite from "@/graphql/mutations/user/toggleActivityAsFavorite";
 import GetActivity from "@/graphql/queries/activity/getActivity";
 import { useSnackbar } from "@/hooks";
-import { useGlobalStyles } from "@/utils";
+import { getFormattedDate, useGlobalStyles } from "@/utils";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   ActionIcon,
@@ -98,6 +98,9 @@ export function Activity({ activity: initialActivity }: ActivityProps) {
 
         <Text size="sm" color="dimmed" className={classes.ellipsis}>
           {activity.description}
+        </Text>
+        <Text size="sm" color="dimmed">
+          Créée le {getFormattedDate(new Date(activity.createdAt))}
         </Text>
 
         <Link href={`/activities/${activity.id}`} className={classes.link}>
