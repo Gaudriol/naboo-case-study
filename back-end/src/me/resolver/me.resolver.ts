@@ -28,7 +28,7 @@ export class MeResolver {
 
   @Mutation(() => User)
   @UseGuards(AuthGuard)
-  async toggleFavoriteActivity(
+  async toggleActivityAsFavorite(
     @Context() context: ContextWithJWTPayload,
     @Args('activityId') activityId: string,
   ): Promise<User> {

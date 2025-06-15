@@ -76,12 +76,6 @@ export class UserService {
       throw new NotFoundException('Activity not found');
     }
 
-    // await user.populate({
-    //   path: 'favoriteActivities',
-    // });
-
-    console.log('USER FAVORITE ACTIVITIES', user.favoriteActivities);
-
     const activityIndex = user.favoriteActivities.findIndex(
       (favoritedActivity) => favoritedActivity._id.toString() === activityId,
     );

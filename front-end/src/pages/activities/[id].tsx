@@ -3,9 +3,15 @@ import { graphqlClient } from "@/graphql/apollo";
 import {
   GetActivityQuery,
   GetActivityQueryVariables,
+  ToggleActivityAsFavoriteMutation,
+  ToggleActivityAsFavoriteMutationVariables,
 } from "@/graphql/generated/types";
+import ToggleActivityAsFavorite from "@/graphql/mutations/user/toggleActivityAsFavorite";
 import GetActivity from "@/graphql/queries/activity/getActivity";
-import { Badge, Flex, Grid, Group, Image, Text } from "@mantine/core";
+import { useAuth, useSnackbar } from "@/hooks";
+import { useMutation, useQuery } from "@apollo/client";
+import { Badge, Button, Flex, Grid, Group, Image, Text } from "@mantine/core";
+import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -18,6 +24,7 @@ export const getServerSideProps: GetServerSideProps<
   ActivityDetailsProps
 > = async ({ params, req }) => {
   if (!params?.id || Array.isArray(params.id)) return { notFound: true };
+  if (!/^[0-9a-fA-F]{24}$/.test(params.id)) return { notFound: true };
   const response = await graphqlClient.query<
     GetActivityQuery,
     GetActivityQueryVariables
@@ -29,8 +36,50 @@ export const getServerSideProps: GetServerSideProps<
   return { props: { activity: response.data.getActivity } };
 };
 
-export default function ActivityDetails({ activity }: ActivityDetailsProps) {
+export default function ActivityDetails({
+  activity: initialActivity,
+}: ActivityDetailsProps) {
   const router = useRouter();
+  const { user } = useAuth();
+  const snackbar = useSnackbar();
+
+  const { data } = useQuery<GetActivityQuery, GetActivityQueryVariables>(
+    GetActivity,
+    {
+      variables: { id: initialActivity.id },
+      fetchPolicy: "cache-and-network",
+    }
+  );
+
+  const activity = data?.getActivity || initialActivity;
+
+  const [toggleActivityAsFavorited] = useMutation<
+    ToggleActivityAsFavoriteMutation,
+    ToggleActivityAsFavoriteMutationVariables
+  >(ToggleActivityAsFavorite, {
+    refetchQueries: [
+      {
+        query: GetActivity,
+        variables: { id: activity.id },
+      },
+    ],
+    onError: () => {
+      snackbar.error("Une erreur est survenue.");
+    },
+  });
+
+  const onToggleFavorite = async () => {
+    if (!user) {
+      snackbar.error(
+        "Vous devez être connecté pour ajouter une activité aux favoris."
+      );
+      router.push("/login");
+      return;
+    }
+    toggleActivityAsFavorited({
+      variables: { activityId: activity.id },
+    });
+  };
 
   return (
     <>
@@ -62,6 +111,22 @@ export default function ActivityDetails({ activity }: ActivityDetailsProps) {
             <Text size="sm" color="dimmed">
               Ajouté par {activity.owner.firstName} {activity.owner.lastName}
             </Text>
+            <Button
+              leftIcon={
+                activity.isFavorited ? (
+                  <IconHeartFilled size={16} />
+                ) : (
+                  <IconHeart size={16} />
+                )
+              }
+              variant="light"
+              color="pink"
+              onClick={onToggleFavorite}
+            >
+              {activity.isFavorited
+                ? "Retirer des favoris"
+                : "Ajouter aux favoris"}
+            </Button>
           </Flex>
         </Grid.Col>
       </Grid>

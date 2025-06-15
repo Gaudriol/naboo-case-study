@@ -23,7 +23,7 @@ import { ContextWithJWTPayload } from 'src/auth/types/context';
 export class ActivityResolver {
   constructor(
     private readonly activityService: ActivityService,
-    private readonly userServices: UserService,
+    private readonly userService: UserService,
   ) {}
 
   @ResolveField(() => ID)
@@ -73,6 +73,22 @@ export class ActivityResolver {
   @Query(() => Activity)
   async getActivity(@Args('id') id: string): Promise<Activity> {
     return this.activityService.findOne(id);
+  }
+
+  @ResolveField(() => Boolean, { nullable: true })
+  async isFavorited(
+    @Context() context: ContextWithJWTPayload,
+    @Parent() activity: Activity,
+  ): Promise<boolean | null> {
+    console.log('Checking if activity is favorited by user:', activity._id);
+    if (!context.jwtPayload?.id) {
+      return null;
+    }
+    console.log('Passed user check | Context JWT Payload:', context.jwtPayload);
+    const user = await this.userService.getById(context.jwtPayload.id);
+    const isFavorited = user.favoriteActivities.includes(activity._id);
+    console.log('returning:', isFavorited);
+    return isFavorited;
   }
 
   @Mutation(() => Activity)
