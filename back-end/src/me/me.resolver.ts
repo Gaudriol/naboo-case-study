@@ -37,4 +37,16 @@ export class MeResolver {
       activityId,
     });
   }
+
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async orderFavoriteActivities(
+    @Context() context: ContextWithJWTPayload,
+    @Args('activityIds', { type: () => [String] }) activityIds: string[],
+  ) {
+    return this.userService.orderFavoriteActivities({
+      userId: context.jwtPayload.id,
+      activityIds,
+    });
+  }
 }

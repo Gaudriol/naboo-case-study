@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SignUpInput } from 'src/auth/types';
@@ -86,6 +90,40 @@ export class UserService {
       user.favoriteActivities.splice(activityIndex, 1);
     }
 
+    return await user.save();
+  }
+
+  async orderFavoriteActivities({
+    userId,
+    activityIds,
+  }: {
+    userId: string;
+    activityIds: string[];
+  }): Promise<User> {
+    // TODO: Utility to assert user presence
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const activities = await this.activityModel
+      .find({ _id: { $in: activityIds } })
+      .exec();
+
+    const storedFavoriteActivityIds = user.favoriteActivities.map((activity) =>
+      activity._id.toString(),
+    );
+    const hasMismatch =
+      storedFavoriteActivityIds.length !== activityIds.length ||
+      !activityIds.every((id) => storedFavoriteActivityIds.includes(id));
+
+    if (hasMismatch) {
+      throw new BadRequestException(
+        "Activity IDs must match exactly with user's favorite activities",
+      );
+    }
+
+    user.favoriteActivities = activities;
     return await user.save();
   }
 
