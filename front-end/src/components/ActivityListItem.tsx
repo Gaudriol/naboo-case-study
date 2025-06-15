@@ -11,7 +11,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
   const { classes } = useGlobalStyles();
 
   return (
-    <Flex align="center" justify="space-between">
+    <Flex align="center" justify="space-between" style={{ flexGrow: 1 }}>
       <Flex gap="md" align="center">
         <Image
           src="https://dummyimage.com/125"

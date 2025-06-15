@@ -1,0 +1,13 @@
+.item {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-lg);
+  padding-left: calc(var(--mantine-spacing-xl) - var(--mantine-spacing-md));
+  border-radius: var(--mantine-radius-md);
+  cursor: grab;
+}
+
+.itemDragging {
+  box-shadow: var(--mantine-shadow-sm);
+  background-color: var(--mantine-color-gray-0);
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
