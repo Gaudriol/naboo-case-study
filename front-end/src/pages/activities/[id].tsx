@@ -71,10 +71,10 @@ export default function ActivityDetails({
 
   const onToggleFavorite = async () => {
     if (!user) {
-      snackbar.error(
+      router.push("/signin");
+      snackbar.info(
         "Vous devez être connecté pour ajouter une activité aux favoris."
       );
-      router.push("/login");
       return;
     }
     toggleActivityAsFavorited({
