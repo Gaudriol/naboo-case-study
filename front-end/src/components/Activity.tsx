@@ -7,6 +7,7 @@ import {
 } from "@/graphql/generated/types";
 import ToggleActivityAsFavorite from "@/graphql/mutations/user/toggleActivityAsFavorite";
 import GetActivity from "@/graphql/queries/activity/getActivity";
+import GetUserFavoriteActivities from "@/graphql/queries/user/getUserFavoriteActivities";
 import { useAuth, useSnackbar } from "@/hooks";
 import { useGlobalStyles } from "@/utils";
 import { useMutation, useQuery } from "@apollo/client";
@@ -51,6 +52,9 @@ export function Activity({ activity: initialActivity }: ActivityProps) {
         query: GetActivity,
         variables: { id: activity.id },
       },
+      {
+        query: GetUserFavoriteActivities,
+      }
     ],
     onError: () => {
       snackbar.error("Une erreur est survenue.");

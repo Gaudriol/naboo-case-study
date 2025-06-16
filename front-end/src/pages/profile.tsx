@@ -1,4 +1,9 @@
-import { ActivityListItem, PageTitle, DraggableList } from "@/components";
+import {
+  ActivityListItem,
+  PageTitle,
+  DraggableList,
+  EmptyData,
+} from "@/components";
 import { graphqlClient } from "@/graphql/apollo";
 import {
   GetUserFavoriteActivitiesQuery,
@@ -115,7 +120,7 @@ const Profile = ({
           Vous pouvez réorganiser vos activités favorites en les glissant et en
           les déposant.
         </Text>
-        {orderedFavoriteActivities.length > 0 && (
+        {orderedFavoriteActivities.length > 0 ? (
           <DraggableList
             items={orderedFavoriteActivities}
             onReorder={onReorderActivities}
@@ -127,6 +132,8 @@ const Profile = ({
               </>
             )}
           </DraggableList>
+        ) : (
+          <EmptyData />
         )}
       </Stack>
     </>
