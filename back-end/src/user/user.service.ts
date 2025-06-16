@@ -50,10 +50,7 @@ export class UserService {
   }
 
   async getFavoriteActivities(userId: string): Promise<Activity[]> {
-    const user = await this.userModel.findById(userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.getById(userId);
     await user.populate({
       path: 'favoriteActivities',
       populate: {
@@ -70,10 +67,7 @@ export class UserService {
     userId: string;
     activityId: string;
   }): Promise<User> {
-    const user = await this.userModel.findById(userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.getById(userId);
 
     const activity = await this.activityModel.findById(activityId);
     if (!activity) {
@@ -100,11 +94,7 @@ export class UserService {
     userId: string;
     activityIds: string[];
   }): Promise<User> {
-    // TODO: Utility to assert user presence
-    const user = await this.userModel.findById(userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.getById(userId);
 
     const storedFavoriteActivityIds = user.favoriteActivities.map((activity) =>
       activity._id.toString(),
@@ -139,10 +129,7 @@ export class UserService {
   }
 
   async updateToken(id: string, token: string): Promise<User> {
-    const user = await this.userModel.findById(id).exec();
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.getById(id);
     user.token = token;
     return user.save();
   }

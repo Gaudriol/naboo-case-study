@@ -33,7 +33,7 @@ export default function Discover({ activities }: DiscoverProps) {
   return (
     <>
       <Head>
-        <title>Discover | CDTR</title>
+        <title>Découvrir | CDTR</title>
       </Head>
       <Group position="apart">
         <PageTitle title="Découvrez des activités" />
