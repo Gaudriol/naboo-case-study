@@ -10,7 +10,7 @@ import OrderFavoriteActivities from "@/graphql/mutations/user/orderFavoriteActiv
 import GetUserFavoriteActivities from "@/graphql/queries/user/getUserFavoriteActivities";
 import { withAuth } from "@/hocs";
 import { useAuth, useSnackbar } from "@/hooks";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Avatar, Flex, Stack, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import { GetServerSideProps } from "next";
@@ -38,12 +38,32 @@ export const getServerSideProps: GetServerSideProps<ProfileProps> = async ({
   };
 };
 
-const Profile = ({ favoriteActivities }: ProfileProps) => {
+const Profile = ({
+  favoriteActivities: initialFavoriteActivities,
+}: ProfileProps) => {
   const { user } = useAuth();
   const snackbar = useSnackbar();
-  const [orderedFavoriteActivities, setOrderedFavoriteActivities] = useState(favoriteActivities);
+  const [orderedFavoriteActivities, setOrderedFavoriteActivities] = useState(
+    initialFavoriteActivities
+  );
 
-  // Trigger mutation to order favorite activities on reorder
+  const { data } = useQuery<
+    GetUserFavoriteActivitiesQuery,
+    GetUserFavoriteActivitiesQueryVariables
+  >(GetUserFavoriteActivities, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: () => {
+      setOrderedFavoriteActivities(
+        data?.getUserFavoriteActivities || orderedFavoriteActivities
+      );
+    },
+    onError: () => {
+      snackbar.error(
+        "Une erreur est survenue lors du chargement de vos activités favorites."
+      );
+    },
+  });
+
   const [orderFavoriteActivities] = useMutation<
     OrderFavoriteActivitiesMutation,
     OrderFavoriteActivitiesMutationVariables
@@ -58,9 +78,9 @@ const Profile = ({ favoriteActivities }: ProfileProps) => {
     const newList = [...orderedFavoriteActivities];
     const [movedItem] = newList.splice(from, 1);
     newList.splice(to, 0, movedItem);
-    
+
     setOrderedFavoriteActivities(newList);
-    
+
     const activityIds = newList.map((activity) => activity.id);
     try {
       await orderFavoriteActivities({ variables: { activityIds } });
@@ -89,13 +109,13 @@ const Profile = ({ favoriteActivities }: ProfileProps) => {
           <Text>{user?.lastName}</Text>
         </Flex>
       </Flex>
-      {favoriteActivities.length > 0 && (
-        <Stack mt="md" spacing="sm">
-          <Title order={3}>Mes activités favorites</Title>
-          <Text size="sm" color="dimmed">
-            Vous pouvez réorganiser vos activités favorites en les glissant et
-            en les déposant.
-          </Text>
+      <Stack mt="md" spacing="sm">
+        <Title order={3}>Mes activités favorites</Title>
+        <Text size="sm" color="dimmed">
+          Vous pouvez réorganiser vos activités favorites en les glissant et en
+          les déposant.
+        </Text>
+        {orderedFavoriteActivities.length > 0 && (
           <DraggableList
             items={orderedFavoriteActivities}
             onReorder={onReorderActivities}
@@ -107,8 +127,8 @@ const Profile = ({ favoriteActivities }: ProfileProps) => {
               </>
             )}
           </DraggableList>
-        </Stack>
-      )}
+        )}
+      </Stack>
     </>
   );
 };

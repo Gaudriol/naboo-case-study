@@ -8,6 +8,7 @@ import {
 } from "@/graphql/generated/types";
 import ToggleActivityAsFavorite from "@/graphql/mutations/user/toggleActivityAsFavorite";
 import GetActivity from "@/graphql/queries/activity/getActivity";
+import GetUserFavoriteActivities from "@/graphql/queries/user/getUserFavoriteActivities";
 import { useAuth, useSnackbar } from "@/hooks";
 import { useMutation, useQuery } from "@apollo/client";
 import { Badge, Button, Flex, Grid, Group, Image, Text } from "@mantine/core";
@@ -62,6 +63,9 @@ export default function ActivityDetails({
       {
         query: GetActivity,
         variables: { id: activity.id },
+      },
+      {
+        query: GetUserFavoriteActivities,
       },
     ],
     onError: () => {

@@ -165,7 +165,7 @@ export type ToggleActivityAsFavoriteMutationVariables = Exact<{
 }>;
 
 
-export type ToggleActivityAsFavoriteMutation = { __typename?: 'Mutation', toggleActivityAsFavorite: { __typename?: 'User', id: string, favoriteActivities?: Array<{ __typename?: 'Activity', id: string, isFavorited?: boolean | null }> | null } };
+export type ToggleActivityAsFavoriteMutation = { __typename?: 'Mutation', toggleActivityAsFavorite: { __typename?: 'User', id: string, favoriteActivities?: Array<{ __typename?: 'Activity', id: string, city: string, description: string, name: string, price: number, isFavorited?: boolean | null, createdAt?: any | null, owner: { __typename?: 'User', firstName: string, lastName: string } }> | null } };
 
 export type GetActivitiesQueryVariables = Exact<{ [key: string]: never; }>;
 

@@ -84,7 +84,14 @@ export class UserService {
       user.favoriteActivities.splice(activityIndex, 1);
     }
 
-    return await user.save();
+    const savedUser = await user.save();
+    await savedUser.populate({
+      path: 'favoriteActivities',
+      populate: {
+        path: 'owner',
+      },
+    });
+    return savedUser;
   }
 
   async orderFavoriteActivities({
