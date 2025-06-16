@@ -57,7 +57,7 @@ export class ActivityService {
       .find({
         $and: [
           { city },
-          ...(price ? [{ price }] : []),
+          ...(price ? [{ price: { $lte: price } }] : []),
           ...(activity ? [{ name: { $regex: activity, $options: 'i' } }] : []),
         ],
       })

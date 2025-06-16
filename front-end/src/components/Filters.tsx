@@ -36,7 +36,7 @@ export function Filters({
       />
       <NumberInput
         icon={<IconCurrencyEuro />}
-        placeholder="Prix"
+        placeholder="Prix maximum"
         type="number"
         onChange={(e) => setSearchPrice(Number(e) || undefined)}
         value={price}
